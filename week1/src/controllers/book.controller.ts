@@ -11,6 +11,12 @@ export const getBooks = (req: Request, res: Response) => {
       minYear ? Number(minYear) : undefined,
       maxYear ? Number(maxYear) : undefined
     );
+
+    if (result.length === 0) {
+      responseError(res, 404, "No books found");
+      return;
+    }
+
     responseSucces(res, result, "Books retrieved successfully");
   } catch (error: any) {
     responseError(res, 500, error.message, 500);

@@ -9,27 +9,21 @@ export class BookServices {
     let result = books;
 
     if (queryTitle) {
-      result = result.filter((book) => {
-        book.title.toLowerCase().includes(queryTitle.toLowerCase());
-      });
+      result = result.filter((book) =>
+        book.title.toLowerCase().includes(queryTitle.toLowerCase())
+      );
     }
     if (queryMinYear) {
-      result = result.filter((book) => {
-        book.publishedYear >= queryMinYear;
-      });
+      result = result.filter((book) => book.publishedYear >= queryMinYear);
     }
     if (queryMaxYear) {
-      result = result.filter((book) => {
-        book.publishedYear <= queryMaxYear;
-      });
+      result = result.filter((book) => book.publishedYear <= queryMaxYear);
     }
     return result;
   }
 
   static findById(id: number): Book | undefined {
-    const book = books.find((b) => {
-      b.id === id;
-    });
+    const book = books.find((b) => b.id === id);
     if (!book) {
       throw new Error("Book not found");
     }
