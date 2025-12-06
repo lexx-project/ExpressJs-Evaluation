@@ -6,6 +6,7 @@ import {
   getBooks,
   updateBook,
 } from "../controllers/book.controller.js";
+import { validateBook } from "../middlewares/validator.middleware.js";
 
 const router = express.Router();
 
@@ -13,9 +14,9 @@ router.get("/", getBooks);
 
 router.get("/:id", getBookById);
 
-router.post("/", createBook);
+router.post("/", validateBook, createBook);
 
-router.put("/:id", updateBook);
+router.put("/:id", validateBook, updateBook);
 
 router.delete("/:id", deleteBook);
 
