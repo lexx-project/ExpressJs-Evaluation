@@ -1,68 +1,48 @@
-import type { Request, Response } from "express";
-import { BookServices } from "../services/book.service.js";
-import { responseError, responseSucces } from "../utils/response.js";
+import type { Request, Response } from "express"
+import * as bookService from "../services/book.service.js"
+import { asyncHandler } from "../utils/async.handler.js"
+import { succesResponse } from "../utils/response.js"
+import { errorResponse } from "../utils/response.js"
 
-export const getBooks = (req: Request, res: Response) => {
-  try {
-    const { title, minYear, maxYear } = req.query;
+export const getAllBooks = asyncHandler(async (_req: Request, res: Response) => {
+  const books = await bookService.getAllBooks()
+  return succesResponse(res, "Books fetched successfully", books, 200)
+})
 
-    const result = BookServices.findAll(
-      title as string | undefined,
-      minYear ? Number(minYear) : undefined,
-      maxYear ? Number(maxYear) : undefined
-    );
-
-    if (result.length === 0) {
-      responseError(res, 404, "No books found");
-      return;
-    }
-
-    responseSucces(res, result, "Books retrieved successfully");
-  } catch (error: any) {
-    responseError(res, 500, error.message, 500);
+export const getBookById = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params
+  if (!id) {
+    return errorResponse(res, "Book ID is required", 400)
   }
-};
-
-export const getBookById = (req: Request, res: Response) => {
-  try {
-    const id = Number(req.params.id);
-
-    const result = BookServices.findById(id);
-
-    responseSucces(res, result, "Book retrieved successfully");
-  } catch (error: any) {
-    responseError(res, 404, error.message);
+  const book = await bookService.getBookById(id)
+  if (!book) {
+    return errorResponse(res, "Book not found", 404)
   }
-};
+  return succesResponse(res, "Book fetched successfully", book, 200)
+})
 
-export const createBook = (req: Request, res: Response) => {
-  try {
-    const bookData = req.body;
-    const result = BookServices.create(bookData);
-    responseSucces(res, result, "Book created successfully", 201);
-  } catch (error: any) {
-    responseError(res, error.message);
+export const createBook = asyncHandler(async(req: Request, res: Response) => {
+  const book = await bookService.createBook(req.body)
+  return succesResponse(res, "Book created succesfully", book, 201)
+})
+
+export const updateBook = asyncHandler(async(req: Request, res: Response) => {
+  const {id} = req.params
+  if (!id) {
+    return errorResponse(res, "Book ID is required", 400)
   }
-};
-export const updateBook = (req: Request, res: Response) => {
-  try {
-    const id = Number(req.params.id);
-    const bookData = req.body;
-    const result = BookServices.update(id, bookData);
+   
+  const book = await bookService.updateBook(id, req.body)
+  return succesResponse(res, "Book updated successfully", book, 200)
+})
 
-    responseSucces(res, result, "Book updated successfully", 201);
-  } catch (error: any) {
-    responseError(res, 404, error.message);
+export const deleteBook = asyncHandler(async(req: Request, res: Response) => {
+  const {id} = req.params
+  if (!id) {
+    return errorResponse(res, "Book ID is required", 400)
   }
-};
 
-export const deleteBook = (req: Request, res: Response) => {
-  try {
-    const id = Number(req.params.id);
-    const result = BookServices.delete(id);
+  const book = await bookService.deleteBook(id)
+  return succesResponse(res, "Book deleted successfully", book, 200)
+})
 
-    responseSucces(res, result, "Book deleted successfully");
-  } catch (error: any) {
-    responseError(res, 404, error.message);
-  }
-};

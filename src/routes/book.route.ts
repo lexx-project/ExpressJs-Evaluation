@@ -1,23 +1,13 @@
 import express from "express";
-import {
-  createBook,
-  deleteBook,
-  getBookById,
-  getBooks,
-  updateBook,
-} from "../controllers/book.controller.js";
-import { validateBook } from "../middlewares/validator.middleware.js";
+import { createBook, deleteBook, getAllBooks, getBookById, updateBook } from "../controllers/book.controller.js";
+import { createBookValidator, deleteBookValidation, getBookValidation, updateBookValidation, validate } from "../middlewares/book.validator.js";
 
-const router = express.Router();
+const router = express.Router()
 
-router.get("/", getBooks);
+router.get("/", getAllBooks)
+router.get("/:id", validate(getBookValidation), getBookById)
+router.post("/", validate(createBookValidator), createBook)
+router.put("/:id", validate(updateBookValidation), updateBook)
+router.delete("/:id", validate(deleteBookValidation), deleteBook)
 
-router.get("/:id", getBookById);
-
-router.post("/", validateBook, createBook);
-
-router.put("/:id", validateBook, updateBook);
-
-router.delete("/:id", deleteBook);
-
-export default router;
+export default router

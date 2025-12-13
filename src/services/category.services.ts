@@ -1,35 +1,50 @@
-import { categories, type Category } from "../models/category.model.js";
+import prisma from "../prisma.js";
+import type { Category } from "../generated/prisma/index.js";
 
 export class CategoryServices {
-  static findAll() {
-    return categories;
+  static async findAll() {
+    return await prisma.category.findMany({
+       where: {
+         deletedAt: null
+       }
+    });
   }
 
-  static create(name: string) {
-    const newCategory = { id: categories.length + 1, name: name };
-    categories.push(newCategory);
-    return newCategory;
+  static async create(name: string) {
+    return await prisma.category.create({
+      data: { name }
+    });
   }
 
-  static update(id: number, name: string): Category {
-    const index = categories.findIndex((category) => category.id === id);
+  static async findById(id: string) {
+    const category = await prisma.category.findUnique({
+      where: { id, deletedAt: null }
+    });
 
-    if (index === -1) {
+    if (!category) {
       throw new Error("Category not found");
     }
 
-    categories[index] = { ...categories[index], name };
-    return categories[index];
+    return category;
   }
 
-  static delete(id: number): Category {
-    const index = categories.findIndex((category) => category.id === id);
+  static async update(id: string, name: string) {
+    // Check if exists first
+    await this.findById(id); 
+    
+    return await prisma.category.update({
+      where: { id },
+      data: { name }
+    });
+  }
 
-    if (index === -1) {
-      throw new Error("Category not found");
-    }
+  static async delete(id: string) {
+    // Check if exists first
+    await this.findById(id);
 
-    const deletedCategory = categories.splice(index, 1)[0];
-    return deletedCategory;
+    return await prisma.category.update({
+      where: { id },
+      data: { deletedAt: new Date() }
+    });
   }
 }
