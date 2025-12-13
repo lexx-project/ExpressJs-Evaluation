@@ -17,6 +17,7 @@ export const createBookValidator = [
     body('publishedYear').isInt().withMessage('Published Year must be an integer'),
     body('stock').isInt().withMessage('Stock must be an integer'),
     body('isbn').notEmpty().withMessage('ISBN is required'),
+    body('categoryId').isUUID().withMessage('Category ID must be a valid UUID').notEmpty().withMessage('Category ID is required'),
 ]
 
 export const getBookValidation = [

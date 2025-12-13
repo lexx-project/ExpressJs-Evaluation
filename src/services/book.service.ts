@@ -5,7 +5,13 @@ export const getAllBooks = async () => {
     where: {
       deletedAt: null as any
     },
-  
+    include: {
+      category: {
+        select: {
+          name: true
+        }
+      }
+    }
   })
 }
 
@@ -16,7 +22,13 @@ export const getBookById = async (id: string) => {
       id: id,
       deletedAt: null as any
     },
-  
+    include: {
+      category: {
+        select: {
+          name: true
+        }
+      }
+    }
   })
 }
 
