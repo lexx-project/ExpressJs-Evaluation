@@ -18,8 +18,9 @@ export class CategoryServices {
       throw new Error("Category not found");
     }
 
-    categories[index] = { ...categories[index], name };
-    return categories[index];
+    const updatedCategory = { ...categories[index]!, name };
+    categories[index] = updatedCategory;
+    return updatedCategory;
   }
 
   static delete(id: number): Category {
@@ -30,6 +31,6 @@ export class CategoryServices {
     }
 
     const deletedCategory = categories.splice(index, 1)[0];
-    return deletedCategory;
+    return deletedCategory!;
   }
 }

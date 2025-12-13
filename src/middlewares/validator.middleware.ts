@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
 import { body, validationResult } from "express-validator";
-import { responseError } from "../utils/response.js";
+import { errorResponse } from "../utils/response.js";
 
 export const handleValidation = (
   req: Request,
@@ -9,7 +9,7 @@ export const handleValidation = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return responseError(res, 400, "Validation Error", errors.array());
+    return errorResponse(res, errors.array()[0]?.msg || "Validation Error", 400, errors.array());
   }
   next();
 };

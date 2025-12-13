@@ -1,61 +1,48 @@
-import { type Book, books } from "../models/book.model.js";
+import prisma from "../prisma.js"
 
-export class BookServices {
-  static findAll(
-    queryTitle?: string,
-    queryMinYear?: number,
-    queryMaxYear?: number
-  ) {
-    let result = books;
+export const getAllBooks = async () => {
+  return await prisma.book.findMany({
+    where: {
+      deletedAt: null as any
+    },
+  
+  })
+}
 
-    if (queryTitle) {
-      result = result.filter((book) =>
-        book.title.toLowerCase().includes(queryTitle.toLowerCase())
-      );
+
+export const getBookById = async (id: string) => {
+  return await prisma.book.findUnique({
+    where: {
+      id: id,
+      deletedAt: null as any
+    },
+  
+  })
+}
+
+export const createBook = async (data: any) => {
+  return await prisma.book.create({
+    data
+  })
+}
+
+export const updateBook  = async (id: string, data: any) => {
+  return await prisma.book.update({
+    where: {
+      id: id,
+      deletedAt: null as any
+    },
+    data
+  })
+}
+
+export const deleteBook = async (id: string) => {
+  return await prisma.book.update({
+    where: {
+      id: id,
+    },
+    data: {
+      deletedAt: new Date()
     }
-    if (queryMinYear) {
-      result = result.filter((book) => book.publishedYear >= queryMinYear);
-    }
-    if (queryMaxYear) {
-      result = result.filter((book) => book.publishedYear <= queryMaxYear);
-    }
-    return result;
-  }
-
-  static findById(id: number): Book | undefined {
-    const book = books.find((b) => b.id === id);
-    if (!book) {
-      throw new Error("Book not found");
-    }
-    return book;
-  }
-
-  static create(bookData: Omit<Book, "id">): Book | undefined {
-    const newBook: Book = {
-      id: books.length + 1,
-      ...bookData,
-    };
-    books.push(newBook);
-    return newBook;
-  }
-
-  static update(id: number, bookData: Partial<Book>): Book | undefined {
-    const index = books.findIndex((b) => b.id === id);
-    if (index === -1) {
-      throw new Error("Book not found");
-    }
-    books[index] = { ...books[index], ...bookData } as Book;
-    return books[index];
-  }
-
-  static delete(id: number): Book | undefined {
-    const index = books.findIndex((b) => b.id === id);
-
-    if (index === -1) {
-      throw new Error("Book not found");
-    }
-
-    const deletedBook = books.splice(index, 1)[0];
-    return deletedBook;
-  }
+  })
 }
