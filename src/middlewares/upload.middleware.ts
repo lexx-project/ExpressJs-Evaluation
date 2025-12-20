@@ -2,13 +2,11 @@ import multer from "multer";
 import path from "path";
 import type { Request } from "express";
 
-// Configure storage
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
     cb(null, "public/uploads/");
   },
   filename: (_req, file, cb) => {
-    // Generate unique filename: timestamp-originalname
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
     const basename = path.basename(file.originalname, ext);
@@ -16,7 +14,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter - only accept images
 const fileFilter = (
   _req: Request,
   file: Express.Multer.File,
@@ -31,14 +28,12 @@ const fileFilter = (
   }
 };
 
-// Configure multer
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 2 * 1024 * 1024, // 2MB in bytes
+    fileSize: 2 * 1024 * 1024,
   },
 });
 
-// Export middleware for single file upload with field name "cover"
 export const uploadCover = upload.single("cover");
