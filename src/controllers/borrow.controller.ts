@@ -3,10 +3,6 @@ import * as borrowService from "../services/borrow.service.js";
 import { asyncHandler } from "../utils/async.handler.js";
 import { successResponse } from "../utils/response.js";
 
-/**
- * Controller to handle borrowing books
- * Expects authenticated user with req.user.id set by auth middleware
- */
 export const borrow = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.id;
 
@@ -18,9 +14,6 @@ export const borrow = asyncHandler(async (req: Request, res: Response) => {
   return successResponse(res, "Books borrowed successfully", result, 201);
 });
 
-/**
- * Controller to get borrowing history for the authenticated user
- */
 export const getMyHistory = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
