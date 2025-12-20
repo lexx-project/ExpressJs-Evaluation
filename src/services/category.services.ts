@@ -1,50 +1,21 @@
-import prisma from "../prisma.js";
-import type { Category } from "../generated/prisma/index.js";
+import * as categoryRepo from "../repositories/category.repository.js";
 
-export class CategoryServices {
-  static async findAll() {
-    return await prisma.category.findMany({
-       where: {
-         deletedAt: null
-       }
-    });
-  }
+export const getAllCategories = async () => {
+  return await categoryRepo.findAll();
+};
 
-  static async create(name: string) {
-    return await prisma.category.create({
-      data: { name }
-    });
-  }
+export const getCategoryById = async (id: string) => {
+  return await categoryRepo.findById(id);
+};
 
-  static async findById(id: string) {
-    const category = await prisma.category.findUnique({
-      where: { id, deletedAt: null }
-    });
+export const createCategory = async (data: any) => {
+  return await categoryRepo.create(data);
+};
 
-    if (!category) {
-      throw new Error("Category not found");
-    }
+export const updateCategory = async (id: string, data: any) => {
+  return await categoryRepo.update(id, data);
+};
 
-    return category;
-  }
-
-  static async update(id: string, name: string) {
-    // Check if exists first
-    await this.findById(id); 
-    
-    return await prisma.category.update({
-      where: { id },
-      data: { name }
-    });
-  }
-
-  static async delete(id: string) {
-    // Check if exists first
-    await this.findById(id);
-
-    return await prisma.category.update({
-      where: { id },
-      data: { deletedAt: new Date() }
-    });
-  }
-}
+export const deleteCategory = async (id: string) => {
+  return await categoryRepo.softDelete(id);
+};

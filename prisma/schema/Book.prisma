@@ -5,9 +5,13 @@ model Book {
     publishedYear Int
     stock Int
     isbn String @unique
+    cover String? 
     
     categoryId String
     category Category @relation(fields: [categoryId], references: [id])
+
+    // relation to borrow item
+    borrowItems BorrowItem[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

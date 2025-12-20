@@ -1,16 +1,15 @@
+import app from "./app.js";
+import path from "path";
+import { fileURLToPath } from "url";
 import express from "express";
-import bookRouter from "./routes/book.route.js";
-import categoryRouter from "./routes/category.route.js";
 
-import { requestLogger } from "./middlewares/log.middleware.js";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const app = express();
 const PORT = 3000;
 
-app.use(express.json());
-app.use(requestLogger);
-app.use("/books", bookRouter);
-app.use("/category", categoryRouter);
+// Serve static files from public/uploads directory
+app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
