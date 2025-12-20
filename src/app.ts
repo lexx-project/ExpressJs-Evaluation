@@ -3,6 +3,7 @@ import cors from "cors";
 import bookRoutes from "./routes/book.route.js";
 import authRoutes from "./routes/auth.route.js";
 import categoryRoutes from "./routes/category.route.js";
+import borrowRoutes from "./routes/borrow.route.js";
 import morgan from "morgan";
 import { errorHandler } from "./middlewares/error.handler.js";
 import { requestLogger } from "./middlewares/log.middleware.js";
@@ -17,6 +18,7 @@ app.use(requestLogger);
 app.use("/api", authRoutes);
 app.use("/books", bookRoutes);
 app.use("/category", categoryRoutes);
+app.use("/borrows", borrowRoutes);
 
 app.use(errorHandler);
 

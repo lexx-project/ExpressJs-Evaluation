@@ -1,5 +1,6 @@
 model BorrowItem {
     id String @id @default(uuid())
+    qty Int
 
     //relation to borrow
     borrowId String
