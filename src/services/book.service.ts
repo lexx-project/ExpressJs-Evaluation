@@ -1,8 +1,8 @@
 import * as bookRepo from "../repositories/book.repository.js";
 
-export const getAllBooks = async () => {
-  const books = await bookRepo.findAll();
-  return books;
+export const getAllBooks = async (options?: any) => {
+  const result = await bookRepo.findAll(options);
+  return result;
 };
 
 export const getBookById = async (id: string) => {
