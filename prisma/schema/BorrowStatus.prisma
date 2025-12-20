@@ -1,0 +1,4 @@
+enum BorrowStatus {
+    BORROWED
+    RETURNED
+}

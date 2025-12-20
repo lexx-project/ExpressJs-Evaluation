@@ -1,0 +1,19 @@
+model Borrow {
+    id String @id @default(uuid())
+    borrowDate DateTime @default(now())
+    returnDate DateTime?
+    status BorrowStatus @default(BORROWED)
+    
+    // relation to user
+    userId String
+    user User @relation(fields: [userId], references: [id])
+
+    // relation to borrow item
+    borrowItems BorrowItem[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?   
+
+    @@map("borrows")
+}
